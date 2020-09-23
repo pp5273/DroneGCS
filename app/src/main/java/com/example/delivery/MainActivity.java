@@ -1,6 +1,7 @@
 package com.example.delivery;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -29,7 +31,9 @@ import android.widget.TextView;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapSdk;
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     NaverMap mNaverMap;
    private WebView webView;
    TextView result;
-
+String getAddress;
     private Handler handler;
     private Marker marker = new Marker();
 
@@ -65,21 +69,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.manudata();
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("276gbey63g"));
+
+
         ListView listView = (ListView)findViewById(R.id.listView);
         final Adapter myAdapter = new Adapter(this,manuList);
         listView.setAdapter(myAdapter);
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                FragmentManager fm = getSupportFragmentManager();
-                MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
-                if (mapFragment == null) {
-                    mapFragment = MapFragment.newInstance();
-                    fm.beginTransaction().add(R.id.map, mapFragment).commit();
-                }
-
+                mapset();
                 setContentView(R.layout.payment);
 
            //     result = (TextView) findViewById(R.id.address);
@@ -93,7 +93,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      //   handler = new Handler();
 
 
+    }
+public void mapset(){
+    FragmentManager fm = getSupportFragmentManager();
+    MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
+    if (mapFragment == null) {
+        mapFragment = MapFragment.newInstance();
+        fm.beginTransaction().add(R.id.map, mapFragment).commit();
+    }
+    mapFragment.getMapAsync(this);
+}
 
+
+    @UiThread
+    @Override
+    public void onMapReady(@NonNull final NaverMap naverMap) {
+        this.mNaverMap = naverMap;
+
+
+        // 최초 위치, 줌 설정 //
+        CameraPosition cameraPosition = new CameraPosition(
+                new LatLng(35.9424531, 126.6811309), // 대상 지점
+                17 // 줌 레벨
+        );
+        naverMap.setCameraPosition(cameraPosition);
 
 
     }
@@ -178,18 +201,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     manuList.add(new listdata(R.drawable.am,"아이스 아메리카노", "2000원"));
 }
 
-    @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
-    this.mNaverMap = naverMap;
-        UiSettings uiSettings = naverMap.getUiSettings();
-        uiSettings.setZoomControlEnabled(false);
-        uiSettings.setScaleBarEnabled(true);
-
-    }
 
 
 
     public void onBtnSetOrderTap(View view) {
+        mapset();
 
         View dialogView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -211,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 List<Address> list = null;
-
                 String address = editText.getText().toString();
+
                 try {
-                    list = geocoder.getFromLocationName(address,10);
+                    list = geocoder.getFromLocationName(address,50);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e("test","입출력 오류 - 서버에서 주소변환시 에러발생.");
@@ -232,6 +248,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
                 alertDialog.dismiss();
+                getAddress= address;
+
             }
         });
         Button btnNegative = dialogView.findViewById(R.id.btnNegative);
@@ -243,18 +261,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         alertDialog.show();
+
     }
 
 
-    public void lastordercheck(){
+    public void lastordercheck(View view){
+      //  final Button ordercheck = (Button) findViewById(R.id.checkedorder);
         setContentView(R.layout.lastordercheck);
-        final TextView checkedaddress = findViewById(R.id.checkedaddress);
+       // final TextView checkedaddress = findViewById(R.id.checkedaddress);
+        TextView checkedaddress = (TextView) findViewById(R.id.checkedaddress);
+        checkedaddress.setText(getAddress);
+
 
 
     }
 
-public  void returnaddress(){
-        setContentView(R.layout.payment);
+public void returnaddress(View view){
+       // setContentView(R.layout.payment);
+//    Intent sendIntent = new Intent();
+//
+//    sendIntent.setAction(Intent.ACTION_SEND);
+//    sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+//    sendIntent.setType("text/plain");
+//
+//    Intent shareIntent = Intent.createChooser(sendIntent, null);
+//    startActivity(shareIntent);
+
+    Intent intent = new Intent();
+    intent.setClassName("com.example.dronedelivery", "com.example.dronedelivery.MainActivity");
+    intent.putExtra("putData", "UserData");
+    startActivityForResult(intent, 0);
+
 }
 
 }
