@@ -18,6 +18,8 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -55,13 +57,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-    ArrayList<listdata> manuList;
+    ArrayList<listdata> manuList = new ArrayList<>();
     private listdata listdata;
     //   public payment2 payment2;
     NaverMap mNaverMap;
     private WebView webView;
     TextView result;
-    String getAddress,getpostcode,getrequest;
+    String getAddress,getpostcode,getrequest,manu;
 
     private Handler handler;
     private Marker marker = new Marker();
@@ -202,8 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void manudata() {
-        manuList = new ArrayList<listdata>();
         manuList.add(new listdata(R.drawable.am, "아이스 아메리카노", "2000원"));
+
+
     }
 
 
@@ -275,7 +278,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView checkedaddress = (TextView) findViewById(R.id.checkedaddress);
         checkedaddress.setText(getAddress);
 
+        final EditText editText = (EditText)findViewById(R.id.checkedrequest);
 
+
+        editText.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                // 입력되는 텍스트에 변화가 있을 때
+
+            }
+
+
+            @Override
+
+            public void afterTextChanged(Editable arg0) {
+
+                getrequest =editText.getText().toString();
+
+            }
+
+
+
+
+        });
     }
 
     public void returnaddress(View view) {
@@ -293,17 +327,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+
+
+
+
+
+
+
     public  void upload(View view){
         Button buttonInsert = (Button)findViewById(R.id.upload);
         buttonInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String request="ㅁㄴㅇㅁㄴㅇㅁㄴㅇㄴㅁ";
 
+                manu = (String) (manuList.get(0).getName() + manuList.get(0).getPrice());
                 InsertData task = new InsertData();
-                task.execute("http://" + IP_ADDRESS + "/insert.php",getAddress,getpostcode,getrequest);
-
-
+                task.execute("http://" + IP_ADDRESS + "/insert.php",manu,getAddress,getpostcode,getrequest);
 
             }
         });
@@ -335,12 +374,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected String doInBackground(String... params) {
-           final EditText editText = (EditText)findViewById(R.id.checkedrequest);
-            getrequest = editText.getText().toString();
+
             String address = (String) params[1];
             String request = (String) params[2];
             String postcode = (String) params[3];
-
+            String manu = (String) params[4];
 
             // 1. PHP 파일을 실행시킬 수 있는 주소와 전송할 데이터를 준비합니다.
 
@@ -354,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // 여기에 적어준 이름을 나중에 PHP에서 사용하여 값을 얻게 됩니다.
 
-            String postParameters = "&postcode=" + postcode + "&address=" + address + "&request=" + request;
+                    String postParameters = "&postcode=" + postcode + "&address=" + address + "&request=" + request + "&manu=" + manu;
 
 
             try {
