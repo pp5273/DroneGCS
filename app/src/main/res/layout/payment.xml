@@ -18,24 +18,36 @@
 
         <TextView
             android:id="@+id/postcode"
-            android:layout_width="300dp"
+            android:layout_width="230dp"
             android:layout_height="match_parent"
             android:textColor="#000000" />
+
         <Button
+
             android:id="@+id/btnSetOrder"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
+
             android:layout_weight="1"
-            android:text="주소 검색"
+            android:background="@drawable/button_option"
             android:onClick="onBtnSetOrderTap"
-            />
+            android:text="주소 검색"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/checkedorder"
-            android:layout_width="100dp"
+            android:background="@drawable/button_option"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
             android:layout_weight="1"
             android:text="확인"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
             android:onClick="lastordercheck"
             />
 

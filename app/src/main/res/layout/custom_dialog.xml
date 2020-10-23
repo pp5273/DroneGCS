@@ -50,7 +50,7 @@
 
                 <EditText
                     android:id="@+id/addressBox"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     android:gravity="center"
@@ -73,7 +73,7 @@
 
                 <EditText
                     android:id="@+id/detailAddressBox"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     android:gravity="center"
@@ -91,21 +91,25 @@
 
         <Button
             android:id="@+id/btnPositive"
+            android:background="@drawable/button_option"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp"
             android:text="@string/Positive"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnNegative"
+            android:background="@drawable/button_option"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp"
             android:text="@string/Negative"
             android:textStyle="bold" />
     </LinearLayout>

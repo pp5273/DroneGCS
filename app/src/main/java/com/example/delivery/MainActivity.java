@@ -3,46 +3,47 @@ package com.example.delivery;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-
-import android.os.Handler;
-import android.os.Message;
+import android.provider.Settings;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
-import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapSdk;
 import com.naver.maps.map.OnMapReadyCallback;
-import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 
 
@@ -55,35 +56,34 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     ArrayList<listdata> manuList = new ArrayList<>();
     private listdata listdata;
-    //   public payment2 payment2;
     NaverMap mNaverMap;
-    private WebView webView;
-    TextView result;
-    String getAddress,getpostcode,getrequest,manu;
 
-    private Handler handler;
+
+    String getAddress, getpostcode, getrequest, menu;
+    String  getPhoneNumbers;
     private Marker marker = new Marker();
-    private static String IP_ADDRESS = "61.33.158.137";
-    private static String TAG = "phptest";
+
+    private static final int MY_PERMISSION_PHONE = 1111;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //       result = (TextView) findViewById(R.id.address);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        checkPermission();
+
         this.manudata();
         NaverMapSdk.getInstance(this).setClient(
                 new NaverMapSdk.NaverCloudPlatformClient("276gbey63g"));
 
 
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ListView listView = (ListView) findViewById(R.id.listView);
         final Adapter myAdapter = new Adapter(this, manuList);
         listView.setAdapter(myAdapter);
 
@@ -91,22 +91,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mapset();
-                setContentView(R.layout.payment);
 
-                //     result = (TextView) findViewById(R.id.address);
-                //      result.setText(String.format("주소를 입력해 주세요."));
-                //          postcode = (TextView) findViewById(R.id.postcode);
+    mapset();
+    setContentView(R.layout.payment);
+
+
             }
         });
 
 
-        // 핸들러를 통한 JavaScript 이벤트 반응
-        //   handler = new Handler();
-
-
     }
-
+            //프레그먼트에 네이버맵 표시
     public void mapset() {
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
@@ -117,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
     }
 
-
+    //맵의 초기설정
     @UiThread
     @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
@@ -134,84 +129,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
-//    @SuppressLint("SetJavaScriptEnabled")
-//    public void init_webView(){
-//
-//
-//        // WebView 설정
-//        webView = findViewById(R.id.webview);
-//
-//        // JavaScript 허용
-//
-//        webView.getSettings().setJavaScriptEnabled(true);
-//
-//        // JavaScript의 window.open 허용
-//        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-//
-//        // JavaScript이벤트에 대응할 함수를 정의 한 클래스를 붙여줌
-//        // 두 번째 파라미터는 사용될 php에도 동일하게 사용해야함
-//        webView.addJavascriptInterface(new AndroidBridge(), "Delivery");
-//
-//
-//        webView.getSettings().setSupportMultipleWindows(true);
-//
-//
-//        webView.setWebViewClient(new CustomWebViewClient());
-//        //webView.setWebChromeClient(new WebChromeClient());
-//
-//
-//
-//      //  webView.loadUrl("http://pp5273.ivyro.net/address.html");
-//
-//        //webView.loadUrl("http://pp5273.ivyro.net/address.php/");
-//
-//
-//        webView.loadUrl("http://pp5273.ivyro.net/test.php/");
-//
-//    }
-////    public void goToWeb(View view) {
-////
-//////        setContentView(R.layout.gotowebview);
-//////        // WebView 초기화
-//////        init_webView();
-////
-////
-////
-////    }
-//
-//    private class AndroidBridge {
-//
-//        @JavascriptInterface
-//        public void setAddress(final String arg1, final String arg2, final String arg3) {
-//
-//            handler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    setContentView(R.layout.payment2);
-//                    postcode.setText(String.format("(%s) %s %s", arg1, arg2, arg3));
-//
-//                    // WebView를 초기화 하지않으면 재사용할 수 없음
-//
-//
-//
-//                }
-//            });
-//
-//        }
-//    }
-
-
+    //리스트뷰 데이터 삽입
     public void manudata() {
         manuList.add(new listdata(R.drawable.am, "아이스 아메리카노", "2000원"));
-
-
     }
 
 
+        //지오코딩 주소입력시->좌표 변환해 마커 생성
     public void onBtnSetOrderTap(View view) {
-        mapset();
 
         View dialogView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -254,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 alertDialog.dismiss();
                 getAddress = address;
-                getpostcode = (String) postcode.getText();
 
+                getpostcode = "77777";
             }
         });
         Button btnNegative = dialogView.findViewById(R.id.btnNegative);
@@ -272,13 +197,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void lastordercheck(View view) {
-        //  final Button ordercheck = (Button) findViewById(R.id.checkedorder);
-        setContentView(R.layout.lastordercheck);
-        // final TextView checkedaddress = findViewById(R.id.checkedaddress);
-        TextView checkedaddress = (TextView) findViewById(R.id.checkedaddress);
-        checkedaddress.setText(getAddress);
 
-        final EditText editText = (EditText)findViewById(R.id.checkedrequest);
+        setContentView(R.layout.lastordercheck);
+
+        TextView checkedaddress = (TextView) findViewById(R.id.checkedaddress);
+        TextView checkedmenu = (TextView) findViewById(R.id.checkedmenu);
+
+
+        menu = (String) (manuList.get(0).getName() + manuList.get(0).getPrice());
+        checkedaddress.setText(getAddress);
+        checkedmenu.setText(menu);
+        final EditText editText = (EditText) findViewById(R.id.checkedrequest);
 
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -302,50 +231,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             public void afterTextChanged(Editable arg0) {
 
-                getrequest =editText.getText().toString();
+                getrequest = editText.getText().toString();
 
             }
 
 
-
-
         });
     }
+
 
     public void returnaddress(View view) {
-        // setContentView(R.layout.payment);
-//    Intent sendIntent = new Intent();
-//
-//    sendIntent.setAction(Intent.ACTION_SEND);
-//    sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-//    sendIntent.setType("text/plain");
-//
-//    Intent shareIntent = Intent.createChooser(sendIntent, null);
-//    startActivity(shareIntent);
 
 
-
+         setContentView(R.layout.activity_main);
     }
 
+    //서버에 있는 데이터 베이스에 데이터저장
+    public void upload(View view) {
+
+        getPhonenum();
 
 
+        InsertData task = new InsertData();
 
-
-
-
-
-    public  void upload(View view){
-        Button buttonInsert = (Button)findViewById(R.id.upload);
-        buttonInsert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                manu = (String) (manuList.get(0).getName() + manuList.get(0).getPrice());
-                InsertData task = new InsertData();
-                task.execute("http://" + IP_ADDRESS + "/insert.php",manu,getAddress,getpostcode,getrequest);
-
-            }
-        });
+        task.execute("http://pp5273.dothome.co.kr/insertorders.php",menu,getrequest,getAddress,getPhoneNumbers);
+        Toast.makeText(MainActivity.this, "주문이 접수되었습니다.", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -375,10 +285,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... params) {
 
-            String address = (String) params[1];
+            String menu = (String) params[1];
             String request = (String) params[2];
-            String postcode = (String) params[3];
-            String manu = (String) params[4];
+            String address = (String) params[3];
+            String number = (String) params[4];
 
             // 1. PHP 파일을 실행시킬 수 있는 주소와 전송할 데이터를 준비합니다.
 
@@ -392,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // 여기에 적어준 이름을 나중에 PHP에서 사용하여 값을 얻게 됩니다.
 
-                    String postParameters = "&postcode=" + postcode + "&address=" + address + "&request=" + request + "&manu=" + manu;
+            String postParameters = "&menu=" + menu+ "&request=" + request + "&address=" + address + "&number=" + number;
 
 
             try {
@@ -465,4 +375,95 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
+
+
+
+            //핸드폰 전화번호를 가져오기 위한 권한검사 및 권한허용 다이얼로그
+
+
+    private void checkPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE) &&
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_NUMBERS)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("알림")
+                        .setMessage("저장소 권한이 거부되었습니다. 사용을 원하시면 설정에서 해당 권한을 직접 허용하셔야 합니다.")
+                        .setNeutralButton("설정", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                intent.setData(Uri.parse("package:" + getPackageName()));
+                                startActivity(intent);
+                            }
+                        })
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_PHONE_NUMBERS}, MY_PERMISSION_PHONE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_PHONE:
+                for (int i = 0; i < grantResults.length; i++) {
+                    // grantResults[] : 허용된 권한은 0, 거부한 권한은 -1
+                    if (grantResults[i] < 0) {
+                        Toast.makeText(MainActivity.this, "해당 권한을 활성화 하셔야 합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                // 허용했다면 이 부분에서..
+
+                break;
+        }
+    }
+
+
+    //전화번호 가져오기 및 변환
+    @SuppressLint("MissingPermission")
+    public void getPhonenum(){
+        TelephonyManager telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+
+
+        try {
+            getPhoneNumbers=telephony.getLine1Number();
+        } catch (SecurityException e) {}
+
+        if(getPhoneNumbers==null){
+            getPhoneNumbers="010-6608-8659";
+        }
+
+
+        if (getPhoneNumbers.startsWith("+82")) {
+            getPhoneNumbers = getPhoneNumbers.replace("+82", "0"); // +8210xxxxyyyy 로 시작되는 번호
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getPhoneNumbers= PhoneNumberUtils.formatNumber(getPhoneNumbers, Locale.getDefault().getCountry());
+;
+        } else {
+            getPhoneNumbers = PhoneNumberUtils.formatNumber(getPhoneNumbers);
+
+        }
+
+
+
+
+    }
+
+
 }
