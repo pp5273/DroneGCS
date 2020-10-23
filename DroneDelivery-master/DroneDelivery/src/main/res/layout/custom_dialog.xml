@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="20dp"
+    card_view:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:id="@+id/dialogLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:fontFamily="@font/fontstyles"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/colorText"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/fontstyles"
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/colorText" />
+
+            <LinearLayout
+                android:id="@+id/addressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/fontstyles"
+                        android:text="주소 입력(도로명) : "
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                    <EditText
+                        android:id="@+id/addressBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fontstyles"
+                        android:gravity="center"
+                        android:hint="배달받을 주소"
+                        android:text=""
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/fontstyles"
+                        android:text="나머지 주소 입력 : "
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                    <EditText
+                        android:id="@+id/detailAddressBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fontstyles"
+                        android:gravity="center"
+                        android:hint="나머지 주소"
+                        android:text=""
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/fontstyles"
+                        android:text="요청 사항 : "
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                    <EditText
+                        android:id="@+id/requestBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fontstyles"
+                        android:gravity="center"
+                        android:hint="요청사항"
+                        android:text=""
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/orderDetailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/fontstyles"
+                        android:text="배달 주소 : "
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                    <EditText
+                        android:id="@+id/receiveAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fontstyles"
+                        android:text=""
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:fontFamily="@font/fontstyles"
+                        android:text="요청 사항 : "
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+
+                    <TextView
+                        android:id="@+id/receiveRequest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fontstyles"
+                        android:text=""
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorText" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fontstyles"
+                android:text="주문 목록"
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/colorText" />
+            <TextView
+                android:id="@+id/receiveMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/fontstyles"
+                android:text=""
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/colorText" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/snsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/fontstyles"
+                    android:text="폰번호 : "
+                    android:textSize="@dimen/text_size"
+                    android:textColor="@color/colorText" />
+
+                <EditText
+                    android:id="@+id/phoneNoBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/fontstyles"
+                    android:gravity="center"
+                    android:hint="- 제외하고 입력해주세요"
+                    android:text=""
+                    android:textSize="@dimen/text_size"
+                    android:textColor="@color/colorText" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/fontstyles"
+                    android:text="암호 :"
+                    android:textSize="@dimen/text_size"
+                    android:textColor="@color/colorText" />
+
+                <EditText
+                    android:id="@+id/passwordBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/fontstyles"
+                    android:gravity="center"
+                    android:enabled="false"
+                    android:text=""
+                    android:textSize="@dimen/text_size"
+                    android:textColor="@color/colorText" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- 확인 취소 버튼 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnPositive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:fontFamily="@font/fontstyles"
+                android:text="@string/Positive"
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/colorText"
+                android:background="@drawable/ic_bottom_button_style" />
+
+            <Button
+                android:id="@+id/btnNegative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/fontstyles"
+                android:text="@string/Negative"
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/colorText"
+                android:background="@drawable/ic_bottom_button_style" />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
